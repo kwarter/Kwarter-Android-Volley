@@ -105,8 +105,10 @@ public class BasicNetwork implements Network {
                 // if the request is slow, log it.
                 long requestLifetime = SystemClock.elapsedRealtime() - requestStart;
                 logSlowRequests(requestLifetime, request, responseContents, statusLine);
-
-                if (statusCode != HttpStatus.SC_OK && statusCode != HttpStatus.SC_NO_CONTENT) {
+                
+                // KWARTER: Fix to take SC_CREATED & SC_ACCEPTED as good responses
+                if (statusCode != HttpStatus.SC_OK && statusCode != HttpStatus.SC_NO_CONTENT
+                    && statusCode != HttpStatus.SC_CREATED && statusCode != HttpStatus.SC_ACCEPTED) {
                     throw new IOException();
                 }
                 return new NetworkResponse(statusCode, responseContents, responseHeaders, false);
